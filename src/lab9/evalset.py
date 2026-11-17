@@ -27,6 +27,14 @@ MIN_PER_MODE_V2 = 3   # v2 rule: a failure mode with < 3 items cannot show a tre
 REQUIRED = ("item_id", "claim_id", "failure_modes", "provenance", "split", "eval_set_version")
 
 
+# M1: failure modes each public Lab 8 claim exercises (see docs/failure_taxonomy.md).
+FM_BY_CLAIM = {
+    "C-001": ["FM-08"], "C-002": ["FM-03"], "C-003": ["FM-04"], "C-004": ["FM-01"],
+    "C-005": ["FM-09"], "C-006": ["FM-06"], "C-007": ["FM-02"], "C-008": ["FM-08", "FM-03"],
+    "C-009": ["FM-03"], "C-010": ["FM-07"], "C-011": ["FM-05"], "C-012": ["FM-07"],
+    "C-013": ["FM-02"], "C-014": ["FM-04", "FM-05"],
+}
+
 FM_CODE = re.compile(r"FM-\d{2}")
 
 
@@ -46,8 +54,7 @@ def build(source: Path = SOURCE) -> tuple[int, int]:
         items.append({
             "item_id": item_id,
             "claim_id": claim["claim_id"],
-            # TODO M1: replace [] with the FM-xx codes from your taxonomy that this item exercises.
-            "failure_modes": [],
+            "failure_modes": list(FM_BY_CLAIM.get(claim["claim_id"], [])),
             "provenance": {"source": "lab8_public", "matrix_id": claim.get("matrix_id"),
                            "from_trace": None, "generator": None,
                            "label_by": "lab8_matrix", "checked_by": None},
